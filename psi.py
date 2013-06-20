@@ -33,7 +33,6 @@ def _process_psi(date, psi_values):
 
 	struct["date"] = date
 	struct["last_update"] = last
-	struct["last_update_value"] = psi_values[last]
 	struct["history"] = hist_struct
 
 	return struct
