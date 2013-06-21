@@ -62,8 +62,7 @@ def main():
 		msg = prep_message("increased", psi, new_cat)
 
 	cmd = _NOTIFYPY.format(iden=args.identity, msg=msg)
-	# os.system(cmd)
-	print cmd
+	os.system(cmd)
 
 	update_scratch(args.scratch, new_cat)
 
