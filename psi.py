@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from bs4 import BeautifulSoup
+import argparse
 import time
 import urllib2
 import json
@@ -11,10 +12,17 @@ _PSI_DATE_PATTERN = "\\b\\d?\\d (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec
 _DATE_FMT = "%d %b %Y"
 
 def main():
+	parser = argparse.ArgumentParser()
+	parser.add_argument("output", help="output file")
+	parser.add_argument("-t", "--tabsize", type=int, default=2, help="number of spaces to indent JSON")
+	args = parser.parse_args()
+
 	date, psi_values = scrape_NEA()
 	psi_info = _process_psi(date, psi_values)
-	json_str = json.dumps(psi_info, indent=2)
-	print json_str
+	json_str = json.dumps(psi_info, indent=args.tabsize)
+	
+	with open(args.output, "w") as f:
+		f.write(json_str)
 
 def _process_psi(date, psi_values):
 	struct = dict()
