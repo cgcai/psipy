@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from time import localtime, strftime
 import argparse
 import json
 import os
@@ -33,9 +34,17 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-i", "--identity", default="~/.notifypy", help="Hoiio API identity file")
 	parser.add_argument("-k", "--kiasi", action="store_true", help="be kiasi and send an alert even if air quality classification remains the same")
+	parser.add_argument("-b", "--if-before", type=int, help="send a notification only if it's before this time")
+	parser.add_argument("-a", "--if-after", type=int, help="send a notification only if it's after this time")
 	parser.add_argument("scratch", help="notifier scratch file")
 	parser.add_argument("input", help="input file from which to read PSI data")
 	args = parser.parse_args()
+
+	current_hr = strftime("%H", localtime())
+	if args.if_before and current_hr >= args.if_before:
+		return
+	elif args.if_after and current_hr <= args.if_after:
+		return
 
 	old_cat = read_scratch(args.scratch)
 
@@ -53,7 +62,8 @@ def main():
 		msg = prep_message("increased", psi, new_cat)
 
 	cmd = _NOTIFYPY.format(iden=args.identity, msg=msg)
-	os.system(cmd)
+	# os.system(cmd)
+	print cmd
 
 	update_scratch(args.scratch, new_cat)
 
