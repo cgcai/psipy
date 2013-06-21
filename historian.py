@@ -50,7 +50,7 @@ def update_scratch(path, ts):
 def append_history(path, new_entries):
 	with open(path, "a") as f:
 		for (ts, val) in new_entries:
-			f.write("{} {}\n".format(ts, val))
+			f.write("{timestamp} {value}\n".format(timestamp=ts, value=val))
 
 if __name__ == '__main__':
 	main()
