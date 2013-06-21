@@ -22,3 +22,5 @@ There is no point in setting a very high refresh rate as NEA's website is only u
 Keeps a log of 3-hourly PSI readings published by NEA. 
 
 The existing log can be accessed at [psi.qxcg.net/history.txt](http://psi.qxcg.net/history.txt).
+
+`cron` runs the historian every 37th minute of the hour.
