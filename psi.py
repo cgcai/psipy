@@ -48,7 +48,7 @@ def _process_psi(date, psi_values):
 def get_html(url, tries=3):
 	attempt = 0
 	html = None
-	while html == None and attempt < 3:
+	while html == None and attempt < tries:
 		try:
 			html = urllib2.urlopen(url).read()
 		except Exception:
