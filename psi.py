@@ -45,8 +45,18 @@ def _process_psi(date, psi_values):
 
 	return struct
 
+def get_html(url, tries=3):
+	attempt = 0
+	html = None
+	while html == None and attempt < 3:
+		try:
+			html = urllib2.urlopen(url).read()
+		except Exception:
+			attempt += 1
+	return html
+
 def scrape_NEA():
-	source_html = urllib2.urlopen(_PSI_SOURCE).read()
+	source_html = get_html(_PSI_SOURCE)
 	dom = BeautifulSoup(source_html)
 
 	# Scrape and parse the date from the header.
