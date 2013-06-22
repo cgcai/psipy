@@ -62,25 +62,20 @@ def scrape_NEA():
 	psi_table = dom.find_all("table")[1] # PSI values are in the first table.
 	psi_rows = psi_table.find_all("tr")[1:][::2]
 
-	raw_psi_values = list()
+	psi_values = list()
 	for row in psi_rows:
 		for td in row.find_all("td")[1:]: # The first column of each PSI row is some human text.
-			val = td.find(text=True).string.strip()
-			raw_psi_values.append(val)
+			numeric_nodes = map(lambda node: float(node.string.strip()), filter(lambda node: node.string.strip().isnumeric(), td.find_all(text=True)))
+			if len(numeric_nodes) == 1: # Only accept the data if we are absolutely certain it's what we want.
+				psi_values.append(numeric_nodes[0])
+			else:
+				psi_values.append(None)
 
-	psi_values = map(_parse_raw_value, raw_psi_values)
 	return (date, psi_values)
 
 def _parse_datetime(dtval):
 	try:
 		parsed = int(time.mktime(time.strptime(dtval, _DATE_FMT)))
-	except ValueError:
-		parsed = None
-	return parsed
-
-def _parse_raw_value(val):
-	try:
-		parsed = float(val)
 	except ValueError:
 		parsed = None
 	return parsed
