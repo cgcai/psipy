@@ -9,9 +9,6 @@ Currently, the only data being collected is the 3-hourly PSI readings published 
 
 Timestamps are in GMT and follow the Unix convention.
 
-##psi-notify.py
-Sends an SMS alert using `notify.py` when NEA's 3-hourly PSI reading changes significantly.
-
 ##psi.py
 Scrapes NEA's [website](http://app2.nea.gov.sg/anti-pollution-radiation-protection/air-pollution/psi/psi-and-pm2-5-readings), parses 3-hour PSI information, and presents it as a JSON object that can be easily used in other applications.
 
