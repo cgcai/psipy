@@ -7,7 +7,7 @@ import urllib2
 import json
 import re
 
-_PSI_SOURCE = "http://app2.nea.gov.sg/anti-pollution-radiation-protection/air-pollution/psi/psi-and-pm2-5-readings"
+_PSI_SOURCE = "http://app2.nea.gov.sg/anti-pollution-radiation-protection/air-pollution/psi/past-24-hour-psi-readings"
 _PSI_DATE_PATTERN = "\\b\\d?\\d (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) \\d{4}\\b"
 _DATE_FMT = "%d %b %Y"
 
@@ -49,10 +49,8 @@ def scrape_NEA():
 	source_html = urllib2.urlopen(_PSI_SOURCE).read()
 	dom = BeautifulSoup(source_html)
 
-	psi_table = dom.find_all("table")[0] # PSI values are in the first table.
-
 	# Scrape and parse the date from the header.
-	header = psi_table.find("tr").find("th").find("center").find("strong").string.strip()
+	header = dom.find_all("h1")[2].string.strip()
 	matches = re.search(_PSI_DATE_PATTERN, header, flags=re.IGNORECASE)
 	if matches == None:
 		date = None
@@ -61,12 +59,14 @@ def scrape_NEA():
 		date = _parse_datetime(raw_date)
 
 	# Scrape PSI rows.
-	psi_rows = psi_table.find_all("tr")[2:][::2] 
+	psi_table = dom.find_all("table")[1] # PSI values are in the first table.
+	psi_rows = psi_table.find_all("tr")[1:][::2]
 
 	raw_psi_values = list()
 	for row in psi_rows:
-		for val in row.find_all("td")[1:]: # The first column of each PSI row is some human text.
-			raw_psi_values.append(val.string.strip())
+		for td in row.find_all("td")[1:]: # The first column of each PSI row is some human text.
+			val = td.find(text=True).string.strip()
+			raw_psi_values.append(val)
 
 	psi_values = map(_parse_raw_value, raw_psi_values)
 	return (date, psi_values)
