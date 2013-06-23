@@ -53,6 +53,7 @@ def get_html(url, tries=3):
 			html = urllib2.urlopen(url).read()
 		except Exception:
 			attempt += 1
+			time.sleep(attempt * attempt * attempt)
 	return html
 
 def scrape_NEA():
