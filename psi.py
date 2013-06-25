@@ -70,7 +70,7 @@ def scrape_NEA():
 		date = _parse_datetime(raw_date)
 
 	# Scrape PSI rows.
-	psi_table = dom.find_all("table")[1] # PSI values are in the first table.
+	psi_table = dom.find_all("table")[2] # PSI values are in the first table.
 	psi_rows = psi_table.find_all("tr")[1:][::2]
 
 	psi_values = list()
